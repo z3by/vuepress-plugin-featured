@@ -12,6 +12,7 @@
       :dots="dots || false"
       :autoplay="autoplay || true"
       :nav="nav || false"
+      :responsive="{0:{items:1},600:{items:2}, 800:{items: items || 3}}"
     >
       <div
         v-for="post in featuredPosts"
