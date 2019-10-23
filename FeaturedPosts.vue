@@ -1,11 +1,31 @@
 <template>
-  <div v-if="featuredPosts" class="featured-posts">
-    <h2 align="center">{{title}}</h2>
-    <carousel :autoplay="true" :items="items">
-      <div v-for="post in featuredPosts" :key="post.key" class="featured-posts__card">
+  <div
+    v-if="featuredPosts"
+    class="featured-posts"
+  >
+    <h2
+      align="center"
+      v-if="title"
+    >{{title}}</h2>
+    <carousel
+      :items="Number(items) || 3"
+      :dots="dots || false"
+      :autoplay="autoplay || true"
+      :nav="nav || false"
+    >
+      <div
+        v-for="post in featuredPosts"
+        :key="post.key"
+        class="featured-posts__card"
+      >
         <router-link :to="post.path">
-          <img :src="post.frontmatter.headerImage" :alt="post.title" />
+          <img
+            v-if="post.frontmatter.image"
+            :src="post.frontmatter.image"
+            :alt="post.title"
+          />
           <h4>{{post.title}}</h4>
+          <p v-if="post.summary">{{post.summary}}</p>
         </router-link>
       </div>
     </carousel>
@@ -14,14 +34,14 @@
 
 <script>
 export default {
-  props: ["title", "items"],
-  data() {
+  props: ["title", "items", "dots", "autoplay", "nav"],
+  data () {
     return {
       imagesLoaded: {}
     };
   },
   computed: {
-    featuredPosts() {
+    featuredPosts () {
       if (!this.$pagination) {
         return null;
       }
@@ -29,11 +49,7 @@ export default {
       const posts = pages.filter(p => {
         return p.frontmatter.featured;
       });
-      if (posts.length > this.items - 1) {
-        return posts;
-      } else {
-        return null;
-      }
+      return posts
     }
   }
 };
@@ -41,7 +57,7 @@ export default {
 
 <style>
 .featured-posts {
-  margin: 3rem 0;
+  margin: 3rem;
 }
 .featured-posts a {
   text-decoration: none;
